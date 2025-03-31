@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to Plain Text Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            transition: background 0.3s, color 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+
+    <div class="container mx-auto max-w-3xl px-4 py-8">
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Markdown to Plain Text Converter</h1>
+                <button id="toggleTheme" class="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+                    🌙
+                </button>
+            </div>
+
+            <form method="post" class="space-y-4">
+                <textarea name="markdown_text" rows="8" class="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 dark:text-white" 
+                    placeholder="Enter Markdown text here...">{{ request.form.get('markdown_text', '') }}</textarea>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow-md transition">
+                    Convert to Plain Text
+                </button>
+            </form>
+
+            {% if converted_text %}
+            <div class="mt-6">
+                <h2 class="text-lg font-semibold">Converted Plain Text:</h2>
+                <pre class="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-4 rounded-lg mt-2 
+                    max-h-60 overflow-auto whitespace-pre-wrap border border-gray-300 dark:border-gray-600">
+                    {{ converted_text }}
+                </pre>
+            </div>
+            
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById("toggleTheme");
+        const htmlElement = document.documentElement; // Target <html>
+
+        // Check and apply theme preference on page load
+        const storedTheme = localStorage.getItem("theme");
+        if (storedTheme === "dark") {
+            htmlElement.classList.add("dark");
+            themeToggle.textContent = "☀️";  // Change icon to sun for dark mode
+        } else {
+            htmlElement.classList.remove("dark");
+            themeToggle.textContent = "🌙";  // Change icon to moon for light mode
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener("click", () => {
+            if (htmlElement.classList.contains("dark")) {
+                htmlElement.classList.remove("dark");
+                localStorage.setItem("theme", "light"); // Store in localStorage
+                themeToggle.textContent = "🌙";  // Change icon to moon for light mode
+            } else {
+                htmlElement.classList.add("dark");
+                localStorage.setItem("theme", "dark"); // Store in localStorage
+                themeToggle.textContent = "☀️";  // Change icon to sun for dark mode
+            }
+        });
+    </script>
+
+</body>
+</html>
